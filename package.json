@@ -1,6 +1,6 @@
 {
   "name": "react-native-more-trace",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "To track the events",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",

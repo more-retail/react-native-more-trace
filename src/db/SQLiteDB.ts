@@ -10,27 +10,23 @@ class SQLiteInstance {
   static instance?: SQLiteInstance;
   static database?: SQLite.SQLiteDatabase;
 
-  constructor() {
-    if (!SQLiteInstance.instance) {
-      this.openDB();
-      SQLiteInstance.instance = this;
-    }
-    return SQLiteInstance.instance;
-  }
-
   openDB() {
-    SQLite.openDatabase({
-      name: 'trace.db',
-      location: 'default',
-    })
-      .then((database: SQLite.SQLiteDatabase) => {
-        SQLiteInstance.database = database;
+    return new Promise((resolve, reject) => {
+      SQLite.openDatabase({
+        name: 'trace.db',
+        location: 'default',
       })
-      .catch((error) => {
-        if (__DEV__) {
-          console.log('Failed to initiate DB ', error);
-        }
-      });
+        .then((database: SQLite.SQLiteDatabase) => {
+          SQLiteInstance.database = database;
+          resolve(true);
+        })
+        .catch((error) => {
+          if (__DEV__) {
+            console.log('Failed to initiate DB ', error);
+          }
+          reject();
+        });
+    });
   }
 
   closeDB() {

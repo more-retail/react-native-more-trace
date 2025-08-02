@@ -31,16 +31,24 @@ export default class AnalyticsManager {
     if (Platform.OS === 'android') {
       MoreTrace.setSessionId(sessionId);
     }
-    SQLiteDB.populateDB()
-      .then((result: boolean) => {
-        if (result) {
-          AnalyticsManager.syncOfflineData();
-          AnalyticsManager.syncOfflineLogs();
-        }
+    SQLiteDB.openDB()
+      .then(() => {
+        SQLiteDB.populateDB()
+          .then((result: boolean) => {
+            if (result) {
+              AnalyticsManager.syncOfflineData();
+              AnalyticsManager.syncOfflineLogs();
+            }
+          })
+          .catch((error) => {
+            if (__DEV__) {
+              console.log('DB sync error ', error);
+            }
+          });
       })
       .catch((error) => {
         if (__DEV__) {
-          console.log('DB sync error ', error);
+          console.log('Open db error ', error);
         }
       });
   }
